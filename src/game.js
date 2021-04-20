@@ -25,7 +25,7 @@ export default class Game {
     this.gameObjects = [this.paddle, this.ball, ...this.bricks];
   }
   update(ctx) {
-    if ((this.gameState = GAME_STATE.PAUSED)) return;
+    if ((this.gameState == GAME_STATE.PAUSED)) return;
     this.gameObjects.forEach((obj) => {
       obj.update(ctx);
     });
@@ -37,7 +37,9 @@ export default class Game {
     });
   }
   togglePause() {
+
     if (this.gameState == GAME_STATE.PAUSED) {
+      console.log('Pause func')
       this.gameState = GAME_STATE.RUNNING;
     } else {
       this.gameState = GAME_STATE.PAUSED;
