@@ -1,7 +1,6 @@
 import Paddle from "./paddle";
 import InputHandler from "./input";
 import Ball from "./ball";
-import Brick from "./brick";
 import { buildLevel, level1 } from "./levels";
 
 const GAME_STATE = {
@@ -18,6 +17,7 @@ export default class Game {
     this.gameState = GAME_STATE.MENU;
     this.paddle = new Paddle(this);
     this.ball = new Ball(this);
+    this.lives = 3;
     new InputHandler(this.paddle, this);
     this.gameObjects = [];
   }
@@ -28,7 +28,10 @@ export default class Game {
     this.gameState = GAME_STATE.RUNNING;
   }
   update(ctx) {
-    if ((this.gameState == GAME_STATE.PAUSED) || (this.gameState == GAME_STATE.MENU)) return;
+    let lives = this.lives;
+    console.log({lives});
+    if(this.lives == 0) this.gameState = GAME_STATE.GAMEOVER;
+    if ((this.gameState == GAME_STATE.PAUSED) || (this.gameState == GAME_STATE.MENU) || (this.gameState == GAME_STATE.GAMEOVER)) return;
     this.gameObjects.forEach((obj) => {
       obj.update(ctx);
     });
@@ -57,6 +60,16 @@ export default class Game {
       ctx.fillStyle = "white";
       ctx.textAlign = 'center';
       ctx.fillText("Press Space to Start", this.gameWidth/2, this.gameHeight/2);
+    }
+    if(this.gameState == GAME_STATE.GAMEOVER){
+      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+      ctx.fillStyle = "rgb(0, 0, 5)";
+      ctx.fill();
+
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
+      ctx.textAlign = 'center';
+      ctx.fillText("GAME OVER", this.gameWidth/2, this.gameHeight/2);
     }
   }
   togglePause() {
