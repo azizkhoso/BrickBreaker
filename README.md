@@ -1,2 +1,2 @@
 # BrickBreaker
-Created with CodeSandbox
+Created with CodeSandbox works in Parcel
