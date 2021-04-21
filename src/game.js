@@ -15,17 +15,20 @@ export default class Game {
   constructor(gameWidth, gameHeight) {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
-  }
-  start() {
-    this.gameState = GAME_STATE.RUNNING;
+    this.gameState = GAME_STATE.MENU;
     this.paddle = new Paddle(this);
     this.ball = new Ball(this);
     new InputHandler(this.paddle, this);
+    this.gameObjects = [];
+  }
+  start() {
+    if(this.gameState !== GAME_STATE.MENU) return;
     this.bricks = buildLevel(this, level1);
     this.gameObjects = [this.paddle, this.ball, ...this.bricks];
+    this.gameState = GAME_STATE.RUNNING;
   }
   update(ctx) {
-    if ((this.gameState == GAME_STATE.PAUSED)) return;
+    if ((this.gameState == GAME_STATE.PAUSED) || (this.gameState == GAME_STATE.MENU)) return;
     this.gameObjects.forEach((obj) => {
       obj.update(ctx);
     });
@@ -35,6 +38,26 @@ export default class Game {
     this.gameObjects.forEach((obj) => {
       obj.draw(ctx);
     });
+    if(this.gameState == GAME_STATE.PAUSED){
+      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+      ctx.fillStyle = "rgb(0, 0, 5)";
+      ctx.fill();
+
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
+      ctx.textAlign = 'center';
+      ctx.fillText("Paused", this.gameWidth/2, this.gameHeight/2);
+    }
+    if(this.gameState == GAME_STATE.MENU){
+      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+      ctx.fillStyle = "rgb(0, 0, 5)";
+      ctx.fill();
+
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
+      ctx.textAlign = 'center';
+      ctx.fillText("Press Space to Start", this.gameWidth/2, this.gameHeight/2);
+    }
   }
   togglePause() {
 
